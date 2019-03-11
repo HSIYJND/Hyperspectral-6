@@ -39,7 +39,7 @@ class AutoEncoder(nn.Module):
 
 
 def cos_sim(x, y):
-    return np.dot(x, y) / np.sqrt(np.square(x).sum()) * np.sqrt(np.square(y).sum())
+    return np.dot(x, y) / np.sqrt(np.square(x).sum()) / np.sqrt(np.square(y).sum())
 
 
 def io_cos(test_decoder, test_data):
