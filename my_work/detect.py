@@ -36,12 +36,9 @@ def ace(m, s):
 
 def smf(m, t):
     """
-    自适应余弦检测
-    :param m: p * n, 待检测数据，p，光谱数目n
-    :param t: , 目标光谱，p * 1(多个取平均)
-    :return: 检测结果，n * 1
+    测试通过
     """
-    t = np.mean(t, axis=1)
+    t = np.mean(t, axis=1).reshape(-1, 1)
     p, n = m.shape
     u = np.mean(m, axis=1).reshape(-1, 1)
     m = m - u
