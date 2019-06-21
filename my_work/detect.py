@@ -60,16 +60,16 @@ def smf(m, t):
     return result
 
 
-def msd_extract(m):
+def msd_extract(m, k):
     cm = cov(m)
-    v, d = np.linalg.eig(cm)
+    v, d = np.linalg.eigh(cm)
     d = np.fliplr(d)
-    return d[:, :3]
+    return d[:, :k]
 
 
 def msd(m, b, t):
-    b = msd_extract(b)
-    t = msd_extract(t)
+    b = msd_extract(b, 3)
+    t = msd_extract(t, 6)
     p, n = m.shape
     I = np.eye(p)
     e = np.concatenate([b, t], axis=1)
