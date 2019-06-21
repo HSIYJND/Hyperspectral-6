@@ -13,6 +13,9 @@ def cov(m):
 
 
 def ace(m, s):
+    """
+    测试通过
+    """
     s = np.mean(s, axis=1).reshape(-1, 1)
     p, n = m.shape
     u = np.mean(m, axis=1).reshape(-1, 1)
