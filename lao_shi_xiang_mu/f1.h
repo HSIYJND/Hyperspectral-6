@@ -8,16 +8,16 @@
 using namespace Eigen;
 using namespace std;
 
-double cosine_similarity(VectorXd v1, VectorXd v2, set<int> t)
+double cosine_similarity(VectorXd v1, VectorXd v2, set<int> t, int cur_index)
 {
-	// ÅĞ¶ÏÄ³Á½¸ö¹âÆ×ÇúÏß³ıÁËtÖĞ²¨¶Î£¬ÓÉÆäÓà²¨¶Î¼ÆËã³öµÄÓàÏÒÏàËÆ¶È
+	// åˆ¤æ–­æŸä¸¤ä¸ªå…‰è°±æ›²çº¿é™¤äº†tä¸­æ³¢æ®µï¼Œç”±å…¶ä½™æ³¢æ®µè®¡ç®—å‡ºçš„ä½™å¼¦ç›¸ä¼¼åº¦
 	int l = v1.size();
 	double res = 0;
 	double m1 = 0;
 	double m2 = 0;
 	for (int i = 0; i < v1.size(); i++)
 	{
-		if (t.count(i) == 1)
+		if ((t.count(i) >= 1) | (i == cur_index))
 		{
 			continue;
 		}
@@ -35,15 +35,15 @@ double cosine_similarity(VectorXd v1, VectorXd v2, set<int> t)
 void readTxt(string file)
 {
 	ifstream infile;
-	infile.open(file.data());   //½«ÎÄ¼şÁ÷¶ÔÏóÓëÎÄ¼şÁ¬½ÓÆğÀ´ 
-	assert(infile.is_open());   //ÈôÊ§°Ü,ÔòÊä³ö´íÎóÏûÏ¢,²¢ÖÕÖ¹³ÌĞòÔËĞĞ 
+	infile.open(file.data());   //å°†æ–‡ä»¶æµå¯¹è±¡ä¸æ–‡ä»¶è¿æ¥èµ·æ¥ 
+	assert(infile.is_open());   //è‹¥å¤±è´¥,åˆ™è¾“å‡ºé”™è¯¯æ¶ˆæ¯,å¹¶ç»ˆæ­¢ç¨‹åºè¿è¡Œ 
 
 	string s;
 	while (getline(infile, s))
 	{
 		cout << s << endl;
 	}
-	infile.close();             //¹Ø±ÕÎÄ¼şÊäÈëÁ÷ 
+	infile.close();             //å…³é—­æ–‡ä»¶è¾“å…¥æµ 
 }
 
 
@@ -52,7 +52,7 @@ vector<double> str2double(string line)
 	vector<double> v;
 	string cur;
 	double res;
-	
+
 	stringstream input(line);
 	while (input >> cur)
 	{
@@ -60,4 +60,44 @@ vector<double> str2double(string line)
 		v.push_back(res);
 	}
 	return v;
+}
+
+void testReadTxt()
+{
+	string f;
+	f = "C:/Users/82761/Downloads/lao_shi_xiang_mu/lao_shi_xiang_mu/res9.txt";
+	readTxt(f);
+
+	cout << 123 << endl;
+}
+
+set<int> selectBest(int k, VectorXd b, VectorXd a)
+{
+	set<int> selected;
+	selected.insert(-1);
+	while (selected.size() < 3)
+	{
+		int selected_index = -1; // é€‰æœ€å°çš„
+		float min_score = -1.0;
+		for (int i = 0; i < 5; i++)
+		{
+			float cur_score = 0.0;
+			if (selected.count(i) > 0)
+			{
+				continue;
+			}
+			for (int j = 0; j < 10; j++)
+			{
+				cur_score += cosine_similarity(a[i][:], b, selected, i);
+
+			}
+			if ((cur_score < min_score) | (selected_index == -1))
+			{
+				selected_index = i;
+				min_score = cur_score;
+			}
+		}
+		selected.insert(selected_index);
+	}
+	return selected;
 }
